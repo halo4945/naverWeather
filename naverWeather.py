@@ -1,10 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
-import re
+import requests #requests module?
+from bs4 import BeautifulSoup #BS module?
+import re #re module?
 
-class naverWeather():
-    session = requests.Session() 
-    addr = "http://weather.naver.com/rgn/cityWetrCity.nhn?cityRgnCd=CT"
+class naverWeather(): #naverWeather class
+    session = requests.Session() #requests session 받음
+    addr = "http://weather.naver.com/rgn/cityWetrCity.nhn?cityRgnCd=CT" #네이버 날씨 주소 
     map_cityNum = {     # 지역 번호 매핑
             '가평':"001001", '강화':"001002", '고양':"001003", '과천':'001004','광명':"001005" , 
             '광주':"001006", '구리':"001007", '군포':"001008", '김포':"001009", '남양주':"001010",
@@ -61,30 +61,30 @@ class naverWeather():
             '제주':"012005"
             }
 
-    def __init__(self, area="서울"):
+    def __init__(self, area="서울"): #생성자
         self.area = area
         self.addr = None
-        self.result = None
+        self.result = None #result?
         
-        cityNum = naverWeather.map_cityNum[area]
-        if not cityNum:
+        cityNum = naverWeather.map_cityNum[area] #도시 매칭 번호 받음
+        if not cityNum: #없음 종료
             print("도시명 잘못")
             # 잘못된 도시명을 입력한 경우
             return
-        self.addr = naverWeather.addr + cityNum
+        self.addr = naverWeather.addr + cityNum #addr 완성
         
-        self.search()
+        self.search() #검색함수
 
-    def search(self):
-        naverWeather.session.encoding = 'utf-8'
+    def search(self):# 검색함수
+        naverWeather.session.encoding = 'utf-8' #session에 encoding 존재
 
-        req = naverWeather.session.get(self.addr)
-        soup = BeautifulSoup(req.text, "html.parser")
-        table = soup.find(class_="tbl_weather tbl_today3")
+        req = naverWeather.session.get(self.addr) #req session에서 받음
+        soup = BeautifulSoup(req.text, "html.parser")#req에서 html형식으로 받는듯
+        table = soup.find(class_="tbl_weather tbl_today3")#table? soup.find에서 tbl_weather class 테이블 찾는듯
        
-        t_ary = list(table.stripped_strings)
+        t_ary = list(table.stripped_strings)#stripped_strings? 테이블 멤버 리스트형식 받음
 
-        self.result = (
+        self.result = (#결과 인덱스에 값 저장된 듯 네이버 날씨 개발자 옵션으로 봐야 할 듯
                 "["+ self.area + " 날씨 검색 결과]\n"
                 + "- 오늘(" + t_ary[3] + ")\n"
                 + "\t오전 - " + t_ary[7] + "℃(" +  t_ary[9] + ", 강수확률 " + t_ary[11] + ")\n"
@@ -94,7 +94,7 @@ class naverWeather():
                 + "\t오후 - " + t_ary[25] + "℃(" +  t_ary[27] + ", 강수확률 " + t_ary[29] + ")\n"
                 )
 
-    def getWeather(self):
+    def getWeather(self):#getWeather 함수? result 없으면 없음 있으면 result 
         if not self.result:
             # 도시명을 잘못 입력한 경우 결과가 나오지 않는다.
             return "잘못된 도시명입니다"
